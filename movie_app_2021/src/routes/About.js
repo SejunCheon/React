@@ -1,10 +1,13 @@
 import React from "react";
 
-function About() {
+function About(props) {
+  console.log(props);
   return (
-    <span>
-      adasdasdasdssssssssssssssssssssssssssssssssssssssssssssssssssssss
-    </span>
+    <div>
+      <span className="about_container">
+        adasdasdasdssssssssssssssssssssssssssssssssssssssssssssssssssssss
+      </span>
+    </div>
   );
 }
 
