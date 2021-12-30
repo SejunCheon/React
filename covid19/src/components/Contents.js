@@ -1,26 +1,24 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
 const Contents = () => {
   const [confirmedData, setConfirmedData] = useState({
-    labels: ["1", "2", "3"],
-    datasets: [
-      {
-        label: "국내 누적 확진자",
-        backgroundColor: "salmon",
-        fill: true,
-        // data: arr.map((a) => a.confirmed),
-        data: ["1", "2", "3"],
-      },
-    ],
+    // labels: ["1월", "2월", "3월"],
+    // datasets: [
+    //   {
+    //     label: "국내 누적 확진자",
+    //     backgroundColor: "salmon",
+    //     fill: true,
+    //     data: [10, 5, 3],
+    //   },
+    // ],
   });
-  const [quarantinedData, setQuarantinedData] = useState({});
-  const [comparedData, setComparedData] = useState({});
+  // const [quarantinedData, setQuarantinedData] = useState({});
+  // const [comparedData, setComparedData] = useState({});
 
   useEffect(() => {
-    let isCleanUp = true;
     const fetchEvents = async () => {
       const res = await axios.get(
         "https://api.covid19api.com/total/dayone/country/kr"
@@ -55,21 +53,21 @@ const Contents = () => {
         return acc;
       }, []);
 
+      console.log(arr);
+
       const labels = arr.map((a) => `${a.month + 1}월`);
 
-      // setConfirmedData({
-      //   // labels,
-      //   labels: ["1", "2", "3"],
-      //   datasets: [
-      //     {
-      //       label: "국내 누적 확진자",
-      //       backgroundColor: "salmon",
-      //       fill: true,
-      //       // data: arr.map((a) => a.confirmed),
-      //       data: ["1", "2", "3"],
-      //     },
-      //   ],
-      // });
+      setConfirmedData({
+        labels,
+        datasets: [
+          {
+            label: "국내 누적 확진자",
+            backgroundColor: "salmon",
+            fill: true,
+            data: arr.map((a) => a.confirmed),
+          },
+        ],
+      });
     };
 
     fetchEvents();
