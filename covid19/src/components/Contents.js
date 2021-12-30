@@ -5,18 +5,35 @@ import axios from "axios";
 
 const Contents = () => {
   const [confirmedData, setConfirmedData] = useState({
-    // labels: ["1월", "2월", "3월"],
-    // datasets: [
-    //   {
-    //     label: "국내 누적 확진자",
-    //     backgroundColor: "salmon",
-    //     fill: true,
-    //     data: [10, 5, 3],
-    //   },
-    // ],
+    labels: null,
+    datasets: [
+      {
+        data: null,
+      },
+    ],
   });
-  // const [quarantinedData, setQuarantinedData] = useState({});
-  // const [comparedData, setComparedData] = useState({});
+  const [quarantinedData, setQuarantinedData] = useState({
+    labels: null,
+    datasets: [
+      {
+        data: null,
+      },
+    ],
+  });
+  const [comparedData, setComparedData] = useState({
+    labels: null,
+    datasets: [
+      {
+        data: null,
+      },
+    ],
+  });
+
+  const options = {
+    plugins: {
+      legend: { display: true, position: "bottom" },
+    },
+  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -36,7 +53,7 @@ const Contents = () => {
         const death = cur.Deaths;
         const recovered = cur.Recovered;
 
-        const findItem = acc.find((a) => a.year === year && a.month === month);
+        const findItem = acc.find((a) => a.year === 2020 && a.month === month);
 
         if (!findItem) {
           acc.push({ year, month, date, confirmed, active, death, recovered });
@@ -68,6 +85,32 @@ const Contents = () => {
           },
         ],
       });
+
+      setQuarantinedData({
+        labels,
+        datasets: [
+          {
+            label: "월별 격리자 현황",
+            borderColor: "salmon",
+            fill: false,
+            data: arr.map((a) => a.active),
+          },
+        ],
+      });
+
+      const last = arr[arr.length - 1];
+      setComparedData({
+        labels: ["확진자", "격리해제", "사망"],
+        datasets: [
+          {
+            label: "누적 확진, 해제, 사망 비율",
+            backgroundColor: ["#ff3d67", "#059bff", "#ffc233"],
+            borderColor: ["#ff3d67", "#059bff", "#ffc233"],
+            fill: false,
+            data: [last.confirmed, last.recovered, last.death],
+          },
+        ],
+      });
     };
 
     fetchEvents();
@@ -81,14 +124,47 @@ const Contents = () => {
           <Bar
             data={confirmedData}
             options={
-              ({
-                title: {
-                  display: true,
-                  text: "누적 확진자 추이",
-                  fontSize: 16,
-                },
-              },
-              { legend: { display: true, position: "bottom" } })
+              // ({
+              //   title: {
+              //     display: true,
+              //     text: "누적 확진자 추이",
+              //     fontSize: 16,
+              //   },
+              // },
+              // { legend: { display: true, position: "bottom" } })
+              options
+            }
+          />
+        </div>
+        <div>
+          <Line
+            data={quarantinedData}
+            options={
+              // ({
+              //   title: {
+              //     display: true,
+              //     text: "월별 격리자 현황",
+              //     fontSize: 16,
+              //   },
+              // },
+              // { legend: { display: true, position: "bottom" } })
+              options
+            }
+          />
+        </div>
+        <div>
+          <Doughnut
+            data={comparedData}
+            options={
+              // ({
+              //   title: {
+              //     display: true,
+              //     text: `누적 확진, 해제, 사망(2020년기준)`,
+              //     fontSize: 16,
+              //   },
+              // },
+              // { legend: { display: true, position: "bottom" } })
+              options
             }
           />
         </div>
